@@ -1,11 +1,20 @@
 : 1
 name: libfreetype
-version: 0.1.0-a.0.z
-summary: freetype C library
-license: other: proprietary ; Not free/open source.
-url: https://example.org/libfreetype
-email: francois@codesynthesis.com
-#build-error-email: francois@codesynthesis.com
+
+# Note that although the upstream versioning scheme resembles semver they make
+# binary-incompatible changes inbetween patch releases.
+#
+version: 2.11.1-a.0.z
+
+summary: FreeType 2 font engine
+license: FTL ; Freetype project License
+license: GPL-2.0-or-later
+description-file: README
+url: https://freetype.org
+src-url: https://gitlab.freedesktop.org/freetype/freetype
+package-url: https://github.com/build2-packaging/libfreetype
+package-email: packaging@build2.org ; Mailing list.
+email: freetype@nongnu.org ; Mailing list.
+build-error-email: builds@build2.org
 depends: * build2 >= 0.14.0
 depends: * bpkg >= 0.14.0
-#depends: libhello ^1.0.0

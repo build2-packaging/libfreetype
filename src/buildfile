@@ -1,28 +1,44 @@
 intf_libs = # Interface dependencies.
 impl_libs = # Implementation dependencies.
-#import xxxx_libs += libhello%lib{hello}
+#import x_libs += libhello%lib{hello}
 
+# Public headers.
+#
+pub = [dir_path] ../include/freetype/
+
+include $pub
+
+pub_hdrs = $($pub/ pub_hdrs)
+
+lib{freetype}: $pub/{$pub_hdrs}
+
+# Private headers and sources as well as dependencies.
+#
 lib{freetype}: {h c}{**} $impl_libs $intf_libs
-
-h{export}@./: c.importable = false
 
 # Build options.
 #
-c.poptions =+ "-I$out_root" "-I$src_root"
+out_pfx_inc = [dir_path] $out_root/include/
+src_pfx_inc = [dir_path] $src_root/include/
+out_pfx_src = [dir_path] $out_root/src/
+src_pfx_src = [dir_path] $src_root/src/
 
-{hbmia obja}{*}: c.poptions += -DSRC_STATIC_BUILD
-{hbmis objs}{*}: c.poptions += -DSRC_SHARED_BUILD
+c.poptions =+ "-I$out_pfx_src" "-I$src_pfx_src" \
+              "-I$out_pfx_inc" "-I$src_pfx_inc"
+
+{hbmia obja}{*}: c.poptions += -DFREETYPE_STATIC_BUILD
+{hbmis objs}{*}: c.poptions += -DFREETYPE_SHARED_BUILD
 
 # Export options.
 #
 lib{freetype}:
 {
-  c.export.poptions = "-I$out_root" "-I$src_root"
+  c.export.poptions = "-I$out_pfx_inc" "-I$src_pfx_inc"
   c.export.libs = $intf_libs
 }
 
-liba{freetype}: c.export.poptions += -DSRC_STATIC
-libs{freetype}: c.export.poptions += -DSRC_SHARED
+liba{freetype}: c.export.poptions += -DFREETYPE_STATIC
+libs{freetype}: c.export.poptions += -DFREETYPE_SHARED
 
 # For pre-releases use the complete version to make sure they cannot be used
 # in place of another pre-release or the final version. See the version module
@@ -33,11 +49,6 @@ if $version.pre_release
 else
   lib{freetype}: bin.lib.version = "-$version.major.$version.minor"
 
-# Install into the src/ subdirectory of, say, /usr/include/
-# recreating subdirectories.
+# Don't install private headers.
 #
-h{*}:
-{
-  install         = include/src/
-  install.subdirs = true
-}
+h{*}: install = false
