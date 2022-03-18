@@ -1,44 +1,106 @@
-intf_libs = # Interface dependencies.
-impl_libs = # Implementation dependencies.
-#import x_libs += libhello%lib{hello}
+# Remember to update downstream/include/freetype/config/ftoption.h if any
+# dependencies are changed.
+#
+import impl_libs  = libpng%lib{png}
+import impl_libs += libz%lib{z}
+
+# @@ TODO Consider enabling Brotli support? Brotli seems to be quite commonly
+#    used to compress web fonts (see
+#    https://en.wikipedia.org/wiki/Web_Open_Font_Format).
+#
+#    Let's do after cleaning up libpng.
+
+windows = ($c.target.class == 'windows')
+unix    = ($c.target.class == 'linux' || \
+	   $c.target.class == 'bsd'   || \
+	   $c.target.class == 'macos')
 
 # Public headers.
 #
-pub = [dir_path] ../include/freetype/
+pub = [dir_path] ../include
 
 include $pub
 
-pub_hdrs = $($pub/ pub_hdrs)
+pub_hdrs         = $($pub/ pub_hdrs)
+hdr_install_path = $($pub/ hdr_install_path)
 
-lib{freetype}: $pub/{$pub_hdrs}
+src = autofit/autofit   \
+      base/ftbase       \
+      base/ftbbox       \
+      base/ftbdf        \
+      base/ftbitmap     \
+      base/ftcid        \
+      base/ftfstype     \
+      base/ftgasp       \
+      base/ftglyph      \
+      base/ftgxval      \
+      base/ftinit       \
+      base/ftmm         \
+      base/ftotval      \
+      base/ftpatent     \
+      base/ftpfr        \
+      base/ftstroke     \
+      base/ftsynth      \
+      base/fttype1      \
+      base/ftwinfnt     \
+      bdf/bdf           \
+      cache/ftcache     \
+      cff/cff           \
+      cid/type1cid      \
+      gzip/ftgzip       \
+      lzw/ftlzw         \
+      pcf/pcf           \
+      pfr/pfr           \
+      psaux/psaux       \
+      pshinter/pshinter \
+      psnames/psnames   \
+      raster/raster     \
+      sdf/sdf           \
+      sfnt/sfnt         \
+      smooth/smooth     \
+      truetype/truetype \
+      type1/type1       \
+      type42/type42     \
+      winfonts/winfnt
 
-# Private headers and sources as well as dependencies.
+# Headers and sources as well as dependencies.
 #
-lib{freetype}: {h c}{**} $impl_libs $intf_libs
+lib{freetype}: $pub/{$pub_hdrs} h{**} c{$src} $impl_libs
+
+lib{freetype}: base/windows/c{ftsystem ftdebug}: include = $windows
+lib{freetype}: base/unix/c{ftsystem}:            include = $unix
+lib{freetype}: base/c{ftsystem}: include = (! $windows && ! $unix)
+lib{freetype}: base/c{ftdebug}:  include = (! $windows)
+
+# Ensure included source files are distributed.
+#
+lib{freetype}: c{** -{$src}}: include = adhoc
 
 # Build options.
 #
 out_pfx_inc = [dir_path] $out_root/include/
 src_pfx_inc = [dir_path] $src_root/include/
-out_pfx_src = [dir_path] $out_root/src/
-src_pfx_src = [dir_path] $src_root/src/
 
-c.poptions =+ "-I$out_pfx_src" "-I$src_pfx_src" \
-              "-I$out_pfx_inc" "-I$src_pfx_inc"
+c.poptions =+ "-I$out_pfx_inc" "-I$src_pfx_inc" -DFT2_BUILD_LIBRARY
 
-{hbmia obja}{*}: c.poptions += -DFREETYPE_STATIC_BUILD
-{hbmis objs}{*}: c.poptions += -DFREETYPE_SHARED_BUILD
+if $windows
+{
+  c.poptions += -D_CRT_SECURE_NO_WARNINGS -D_CRT_NONSTDC_NO_WARNINGS
 
-# Export options.
+  # Note that upstream recognizes DLL_IMPORT for the import case but this is
+  # too generic of a name to export. So we will rely on auto-importing of
+  # functions (which it seem what upstream does as well).
+  #
+  objs{*}: c.poptions += -DDLL_EXPORT
+}
+
+# Export and pkg-config options.
 #
 lib{freetype}:
 {
-  c.export.poptions = "-I$out_pfx_inc" "-I$src_pfx_inc"
-  c.export.libs = $intf_libs
+  c.export.poptions   = "-I$out_pfx_inc" "-I$src_pfx_inc"
+  c.pkgconfig.include = $hdr_install_path
 }
-
-liba{freetype}: c.export.poptions += -DFREETYPE_STATIC
-libs{freetype}: c.export.poptions += -DFREETYPE_SHARED
 
 # For pre-releases use the complete version to make sure they cannot be used
 # in place of another pre-release or the final version. See the version module

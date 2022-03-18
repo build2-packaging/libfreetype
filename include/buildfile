@@ -1,0 +1,12 @@
+pub_hdrs = h{** -freetype/internal/**}
+
+./: $pub_hdrs
+
+# Install into the freetype/ subdirectory of, say, /usr/include/
+# recreating subdirectories.
+#
+h{*}:
+{
+  install         = include/freetype2/
+  install.subdirs = true
+}
