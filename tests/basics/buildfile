@@ -1,0 +1,3 @@
+import libs = libfreetype%lib{freetype}
+
+exe{driver}: {h c}{**} $libs testscript{**}
