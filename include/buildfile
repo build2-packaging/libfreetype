@@ -1,12 +1,19 @@
-pub_hdrs = h{** -freetype/internal/**}
+pub_hdrs = h{** -freetype/internal/**} freetype/config/h{ftconfig}
 
-./: $pub_hdrs
+./: $pub_hdrs freetype/internal/h{**}
 
-# Install into the freetype/ subdirectory of, say, /usr/include/
-# recreating subdirectories.
+using autoconf
+
+freetype/config/h{ftconfig}: freetype/config/in{ftconfig}
+
+# Install into the freetype2/ subdirectory of, say, /usr/include/ recreating
+# subdirectories. Note that headers are included as <freetype/*> (except for
+# ft2build.h).
 #
+hdr_install_path = [dir_path] include/freetype2/
 h{*}:
 {
-  install         = include/freetype2/
+  install = $hdr_install_path
   install.subdirs = true
 }
+freetype/internal/h{*}: install = false

@@ -1,0 +1,42 @@
+See upstream/docs/INSTALL.ANY for generic build instructions.
+
+Directory layout
+
+We put the platform-specific sources in src/base/{unix,windows}/ instead of
+builds/{unix,windows} as upstream does because they are planning to make this
+change themselves (see
+https://gitlab.freedesktop.org/freetype/freetype/-/issues/1022).
+
+ftoption.h (generated header)
+
+Instead of generating freetype/config/ftoption.h we manually customized it
+(see downstream/) because the only parts that are dynamic in the upstream
+build relate to the dependencies which are static in our build.
+
+Harfbuzz
+
+There is a circular dependency between Freetype and Harfbuzz (see
+upstream/docs/INSTALL.UNIX, section "3.1 Interdependency with HarfBuzz").
+Freetype's dependency on Harfbuzz is the weaker one so breaking the cycle here
+makes sense and this is also what Debian and vcpkg do.
+
+LCD subpixel rendering: ClearType vs. Harmony
+
+Freetype provides two alternative subpixel rendering technologies: the newer
+Harmony (the default) and a ClearType-like one if
+FT_CONFIG_OPTION_SUBPIXEL_RENDERING is defined in ftoption.h.
+
+Harmony produces output of the same quality as ClearType but was only added to
+Freetype 2.8.1. Many OS distributions used to disable ClearType due to patent
+issues but these patents have since expired. For ClearType to produce good
+results the client has to set a filter otherwise it is likely to produce
+severe color fringes. Harmony does not have this problem.
+
+Debian Bullseye enables ClearType but as far as I can tell Harmony is the
+preferred option going forward. Therefore we go with Harmony in this package.
+
+See https://github.com/jgneff/openjdk-freetype/wiki/Screenshots for a
+side-by-side comparison between Harmony and ClearType and
+https://bugs.archlinux.org/task/60658#comment178017 and
+https://freetype.org/freetype2/docs/reference/ft2-lcd_rendering.html for
+information.

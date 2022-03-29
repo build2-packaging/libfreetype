@@ -6,8 +6,8 @@ name: libfreetype
 #
 version: 2.11.1-a.0.z
 
-summary: FreeType 2 font engine
-license: FTL ; Freetype project License
+summary: FreeType font rendering C library
+license: FTL ; Freetype project license
 license: GPL-2.0-or-later
 description-file: README
 url: https://freetype.org
@@ -16,5 +16,7 @@ package-url: https://github.com/build2-packaging/libfreetype
 package-email: packaging@build2.org ; Mailing list.
 email: freetype@nongnu.org ; Mailing list.
 build-error-email: builds@build2.org
-depends: * build2 >= 0.14.0
-depends: * bpkg >= 0.14.0
+depends: * build2 >= 0.15.0-
+depends: * bpkg >= 0.15.0-
+depends: libpng ^1.6.37-
+depends: libz ^1.2.1100
