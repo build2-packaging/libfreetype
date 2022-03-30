@@ -1,5 +1,6 @@
 : 1
 name: libfreetype
+project: freetype
 
 # Note that although the upstream versioning scheme resembles semver they make
 # binary-incompatible changes inbetween patch releases.
