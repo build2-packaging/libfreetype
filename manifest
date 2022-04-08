@@ -19,5 +19,6 @@ email: freetype@nongnu.org ; Mailing list.
 build-error-email: builds@build2.org
 depends: * build2 >= 0.15.0-
 depends: * bpkg >= 0.15.0-
-depends: libpng ^1.6.37-
+depends: libbrotli ^1.0.9
+depends: libpng ^1.6.37
 depends: libz ^1.2.1100

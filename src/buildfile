@@ -1,14 +1,9 @@
 # Remember to update downstream/include/freetype/config/ftoption.h if any
 # dependencies are changed.
 #
-import impl_libs  = libpng%lib{png}
+import impl_libs  = libbrotli%lib{brotlidec}
+import impl_libs += libpng%lib{png}
 import impl_libs += libz%lib{z}
-
-# @@ TODO Consider enabling Brotli support? Brotli seems to be quite commonly
-#    used to compress web fonts (see
-#    https://en.wikipedia.org/wiki/Web_Open_Font_Format).
-#
-#    Let's do after cleaning up libpng.
 
 windows = ($c.target.class == 'windows')
 unix    = ($c.target.class == 'linux' || \
