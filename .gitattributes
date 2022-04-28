@@ -17,3 +17,28 @@
 # Use `binary` to make sure certain files are never auto-detected as text.
 #
 #*.png binary
+
+# Explicitly specify symlinks to directories to help git on Windows.
+#
+# See https://build2.org/article/symlinks.xhtml#windows
+#
+include/freetype/internal symlink=dir
+src/autofit symlink=dir
+src/bdf symlink=dir
+src/cache symlink=dir
+src/cff symlink=dir
+src/cid symlink=dir
+src/lzw symlink=dir
+src/pcf symlink=dir
+src/pfr symlink=dir
+src/psaux symlink=dir
+src/pshinter symlink=dir
+src/psnames symlink=dir
+src/raster symlink=dir
+src/sdf symlink=dir
+src/sfnt symlink=dir
+src/smooth symlink=dir
+src/truetype symlink=dir
+src/type1 symlink=dir
+src/type42 symlink=dir
+src/winfonts symlink=dir
