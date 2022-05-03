@@ -19,7 +19,7 @@
 #*.png binary
 
 # Directory symlinks
-include/freetype symlink=dir
+include/freetype/internal symlink=dir
 src/autofit symlink=dir
 src/bdf symlink=dir
 src/cache symlink=dir
