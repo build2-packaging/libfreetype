@@ -17,8 +17,8 @@ package-url: https://github.com/build2-packaging/libfreetype
 package-email: packaging@build2.org ; Mailing list.
 email: freetype@nongnu.org ; Mailing list.
 build-error-email: builds@build2.org
-depends: * build2 >= 0.15.0-
-depends: * bpkg >= 0.15.0-
+depends: * build2 >= 0.15.0
+depends: * bpkg >= 0.15.0
 depends: libbrotli ^1.0.9
 depends: libpng ^1.6.37
 depends: libz ^1.2.1100
