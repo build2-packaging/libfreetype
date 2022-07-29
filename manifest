@@ -5,7 +5,7 @@ project: freetype
 # Note that although the upstream versioning scheme resembles semver they make
 # binary-incompatible changes inbetween patch releases.
 #
-version: 2.11.1-a.0.z
+version: 2.11.1
 
 summary: FreeType font rendering C library
 license: FTL ; Freetype project license
