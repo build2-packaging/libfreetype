@@ -1,0 +1,7 @@
+: 1
+name: libfreetype
+version: 2.11.1
+project: freetype
+summary: FreeType font rendering C library
+license: FTL; Freetype project license
+license: GPL-2.0-or-later
